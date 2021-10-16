@@ -1,0 +1,91 @@
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int size = Integer.parseInt(scanner.nextLine());
+        int steps = Integer.parseInt(scanner.nextLine());
+        int startingRow=0;
+        int startingCol=0;
+        boolean finish = false;
+        char[][] matrix = new char[size][size];
+        for(int i=0;i<size;i++){
+            String line = scanner.nextLine();
+            matrix[i] = line.toCharArray();
+        }
+        for(int row = 0; row<size;row++){
+            for(int col = 0; col<size;col++){
+                if(matrix[row][col] == 'P'){
+                    startingRow = row;
+                    startingCol = col;
+                    break;
+                }
+            }
+        }
+        int[] positions = {startingRow,startingCol};
+
+        for(int j = 0;j<steps;j++){
+            if(finish)break;
+        String command = scanner.nextLine();
+            int currentRow = positions[0];
+            int currentCol = positions[1];
+        positions = move(command,currentRow,currentCol,size);
+
+        if(matrix[positions[0]][positions[1]]== 'B'){
+            currentRow = positions[0];
+            currentCol = positions[1];
+            positions =move(command,currentRow,currentCol,size);
+        }
+        if(matrix[positions[0]][positions[1]]== 'T'){
+               positions[0]= currentRow;
+               positions[1]=currentCol;
+            }
+        if(matrix[positions[0]][positions[1]] == 'F'){
+            finish = true;
+        }
+
+        }
+       if(finish){
+           System.out.println("Well done, the player won first place!");
+       }
+       else{
+           System.out.println("Oh no, the player got lost on the track!");
+       }
+       matrix[startingRow][startingCol] = '.';
+       matrix[positions[0]][positions[1]] = 'P';
+        for(int row = 0; row<size;row++){
+            for(int col = 0; col<size;col++){
+                System.out.print(matrix[row][col]);
+            }
+            System.out.println();
+        }
+    }
+
+    private static int[] move(String command, int currentRow, int currentCol,int size) {
+        switch (command){
+            case "up":
+                if(currentRow == 0){
+                    currentRow = size-1;
+                }else{
+                    currentRow--;
+                }
+                break;
+            case "down":
+                if(currentRow == size-1)currentRow=0;
+                else currentRow++;
+                break;
+            case "left":
+                if(currentCol==0)currentCol=size-1;
+                else currentCol--;
+                break;
+            case "right":
+                if(currentCol==size-1)currentCol=0;
+                else currentCol++;
+                break;
+        }
+        return new int[]{currentRow,currentCol};
+    }
+}
