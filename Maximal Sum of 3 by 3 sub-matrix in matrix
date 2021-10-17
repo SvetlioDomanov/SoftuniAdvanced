@@ -1,0 +1,67 @@
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        int rows = Integer.parseInt(input.split(" ")[0]);
+        int cols = Integer.parseInt(input.split(" ")[1]);
+        int[][] arr = new int[rows][cols];
+        fillMatrix(arr,rows,cols,scanner);
+        int[][] maxArray = new int[3][3];
+        int maxSum = 0;
+
+        for(int i =0; i<rows-2;i++){
+            for(int j =0;j<cols-2;j++){
+               int currentSum = sumOfSmallMatrix(arr,i,j);
+               if(currentSum>maxSum){
+                   maxSum=currentSum;
+                   fillMaxArray(arr,i,j,maxArray);
+               }
+}
+        }
+        System.out.println("Sum = " + maxSum);
+        for(int i = 0; i< 3; i++){
+            for(int j = 0; j< 3; j++){
+                System.out.print(maxArray[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    private static void fillMaxArray(int[][] arr, int i, int j,int[][]maxArray) {
+        int rows = i;
+        int cols;
+        for(int k = 0; k< 3; k++){
+            cols = j;
+            for(int h = 0; h< 3; h++){
+                maxArray[k][h]=arr[rows][cols];
+                cols++;
+            }
+            rows++;
+        }
+
+    }
+
+    private static int sumOfSmallMatrix(int[][] arr, int i, int j) {
+        int sum =0;
+        for(int k=i;k<i+3;k++){
+            for(int h=j;h<j+3;h++){
+                sum+=arr[k][h];
+            }
+        }
+        return sum;
+    }
+
+    private static void fillMatrix(int[][] arr, int rows, int cols,Scanner scanner) {
+        for(int i = 0; i< rows; i++){
+            for(int j = 0; j< cols; j++){
+                arr[i][j]= scanner.nextInt();
+            }
+        }
+    }
+}
