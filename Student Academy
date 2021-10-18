@@ -1,0 +1,33 @@
+package com.company;
+
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Map<String, List<Double>> students = new LinkedHashMap<>();
+        Map<String,Double> averageGrade = new LinkedHashMap<>();
+        int n = Integer.parseInt(scanner.nextLine());
+        for(int i = 0; i<n; i++){
+            String name = scanner.nextLine();
+            double grade = Double.parseDouble(scanner.nextLine());
+            if(!students.containsKey(name)){
+                students.put(name,new ArrayList<>());
+                averageGrade.put(name , 0.0);
+            }
+            students.get(name).add(grade);
+        }
+        for (var student:students.entrySet()) {
+            double sum = 0;
+            for (double j:student.getValue()) {
+                sum+= j;
+            }
+            double average = sum/student.getValue().size();
+            averageGrade.put(student.getKey(),average);
+        }
+averageGrade.entrySet().stream().filter(entry -> entry.getValue()>=4.5)
+        .sorted((e1,e2) -> Double.compare(e2.getValue(), e1.getValue())).
+        forEach(entry -> System.out.printf("%s -> %.2f\n",entry.getKey(),entry.getValue()));
+    }
+}
