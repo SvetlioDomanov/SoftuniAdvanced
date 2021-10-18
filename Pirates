@@ -1,0 +1,71 @@
+package com.company;
+
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class Main {
+
+    public static void main(String[] args) {
+Scanner scanner = new Scanner(System.in);
+        TreeMap<String, Integer> cityPopulation = new TreeMap<>();
+        TreeMap<String, Integer> cityGold = new TreeMap<>();
+
+        String input = scanner.nextLine();
+while(!input.equals("Sail")){
+String cityName = input.split("\\|\\|")[0];
+int population = Integer.parseInt(input.split("\\|\\|")[1]);
+int gold = Integer.parseInt(input.split("\\|\\|")[2]);
+if(cityGold.containsKey(cityName)){
+    cityGold.put(cityName,cityGold.get(cityName)+gold);
+    cityPopulation.put(cityName,cityPopulation.get(cityName)+population);
+}
+else{
+    cityGold.put(cityName,gold);
+    cityPopulation.put(cityName,population);
+}
+
+    input = scanner.nextLine();
+}
+String event = scanner.nextLine();
+while(!event.equals("End")){
+    String[] eventArray = event.split("=>");
+    String command = eventArray[0];
+    String cityName = eventArray[1];
+switch (command){
+    case "Plunder":
+        int peopleKilled = Integer.parseInt(eventArray[2]);
+        int goldStolen = Integer.parseInt(eventArray[3]);
+        cityGold.put(cityName,cityGold.get(cityName)-goldStolen);
+        cityPopulation.put(cityName,cityPopulation.get(cityName)-peopleKilled);
+        System.out.printf("%s plundered! %d gold stolen, %d citizens killed.\n",cityName,goldStolen,peopleKilled);
+        if(cityGold.get(cityName)==0 || cityPopulation.get(cityName)==0){
+            System.out.printf("%s has been wiped off the map!\n",cityName);
+            cityGold.remove(cityName);
+            cityPopulation.remove(cityName);
+        }
+        break;
+    case "Prosper":
+        int goldAdded = Integer.parseInt(eventArray[2]);
+        if(goldAdded<0){
+            System.out.println("Gold added cannot be a negative number!");
+        }
+        else{
+        cityGold.put(cityName,cityGold.get(cityName)+goldAdded);
+            System.out.printf("%d gold added to the city treasury. %s now has %d gold.\n",goldAdded,cityName,cityGold.get(cityName));
+        }
+        break;
+}
+    event = scanner.nextLine();
+}
+if(cityGold.isEmpty()){
+    System.out.println("Ahoy, Captain! All targets have been plundered and destroyed!");
+}
+else{
+
+    System.out.printf("Ahoy, Captain! There are %d wealthy settlements to go to:\n",cityGold.size());
+cityGold.entrySet().stream().sorted((e1,e2)-> Integer.compare(e2.getValue(), e1.getValue()))
+        .forEach(entry -> System.out.printf("%s -> Population: %d citizens, Gold: %d kg\n",entry.getKey(),cityPopulation.get(entry.getKey()),entry.getValue()));
+
+}
+    }
+}
