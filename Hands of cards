@@ -1,0 +1,84 @@
+package com.company;
+
+import java.awt.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        LinkedHashMap<String, Set<String>> playerCards = new LinkedHashMap<>();
+        String input = scanner.nextLine();
+        while(!input.equals("JOKER")){
+        String name = input.split(": ")[0];
+        String cardsStr = input.split(": ")[1];
+        String[] cardsArr = cardsStr.split(", ");
+        Set<String> cards = new HashSet<>();
+        Collections.addAll(cards, cardsArr);
+
+        if(playerCards.containsKey(name)){
+        playerCards.get(name).addAll(cards);
+        }
+        else{
+            playerCards.put(name,cards);
+        }
+            input = scanner.nextLine();
+        }
+
+        playerCards.entrySet().forEach(entry ->{
+            int points = getCardsPoints(entry.getValue());
+            System.out.printf("%s: %d\n",entry.getKey(),points);
+        } );
+
+    }
+
+    private static int getCardsPoints(Set<String> cards) {
+        int sum =0;
+        int power;
+        char type;
+        int typePower;
+        for (String card:cards) {
+            if(card.contains("10")){
+                power = 10;
+                type = card.charAt(2);
+            }
+            else{
+                char number = card.charAt(0);
+                type = card.charAt(1);
+                switch (number){
+                    case 'J':
+                        power = 11;
+                        break;
+                    case 'Q':
+                        power = 12;
+                        break;
+                    case 'K':
+                        power = 13;
+                        break;
+                    case 'A':
+                        power = 14;
+                        break;
+                    default:
+                        power = Integer.parseInt(String.valueOf(number));
+                        break;
+                }
+            }
+            switch (type){
+                case 'S':
+                    typePower =4;
+                    break;
+                case 'H':
+                    typePower =3;
+                    break;
+                case 'D':
+                    typePower =2;
+                    break;
+                default:
+                    typePower =1;
+                    break;
+            }
+        sum+=typePower*power;
+        }
+        return sum;
+    }
+}
