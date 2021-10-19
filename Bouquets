@@ -1,0 +1,46 @@
+package com.company;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int bouquets = 0;
+        int tulips = 0;
+        int daffodils=0;
+
+        ArrayDeque<Integer> daffodilQueue = Arrays.stream(scanner.nextLine().split(", ")).map(Integer::parseInt).collect(Collectors.toCollection(ArrayDeque::new));
+        ArrayDeque<Integer> tulipStack = new ArrayDeque<>();
+        Arrays.stream(scanner.nextLine().split(", ")).map(Integer::parseInt).forEach(tulipStack::push);
+        while(!daffodilQueue.isEmpty() && !tulipStack.isEmpty()){
+        int currentTulips = tulipStack.peek();
+        int currentDaffodil = daffodilQueue.peek();
+        if(currentDaffodil+currentTulips==15){
+            bouquets++;
+            tulipStack.pop();
+            daffodilQueue.poll();
+        }
+        else if(currentDaffodil+currentTulips>15){
+            int decreasedTulips = tulipStack.pop()-2;
+            tulipStack.push(decreasedTulips);
+        }
+        else if(currentDaffodil+currentTulips<15){
+            tulips+=tulipStack.pop();
+            daffodils+=daffodilQueue.poll();
+        }
+
+        }
+        bouquets+=Math.floor(tulips+daffodils)/15;
+        if(bouquets>=5){
+            System.out.printf("You made it! You go to the competition with %d bouquets!\n",bouquets);
+        }
+        else{
+            System.out.printf("You failed... You need more %d bouquets.",5-bouquets);
+
+        }
+    }
+}
