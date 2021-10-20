@@ -1,0 +1,43 @@
+package com.company;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int sum = 0;
+        ArrayDeque<Integer> firstBoxQueue = Arrays.stream(scanner.nextLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toCollection(ArrayDeque::new));
+        ArrayDeque<Integer> secondBoxStack = new ArrayDeque<>();
+        Arrays.stream(scanner.nextLine().split("\\s+")).map(Integer::parseInt).forEach(secondBoxStack::push);
+        while(!firstBoxQueue.isEmpty() && !secondBoxStack.isEmpty()){
+           int firstNumber = firstBoxQueue.peek();
+           int secondNumber = secondBoxStack.pop();
+           int currentSum = firstNumber + secondNumber;
+            if(currentSum%2==0){
+                sum+=currentSum;
+                firstBoxQueue.poll();
+            }
+            else{
+                firstBoxQueue.add(secondNumber);
+            }
+
+        }
+        if(firstBoxQueue.isEmpty()){
+            System.out.println("First magic box is empty.");
+        }
+else{
+            System.out.println("Second magic box is empty.");
+        }
+    if(sum>=90){
+        System.out.println("Wow, your prey was epic! Value: " + sum);
+    }
+    else{
+        System.out.println("Poor prey... Value: " + sum);
+    }
+
+    }
+}
