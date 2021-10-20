@@ -46,7 +46,7 @@ public class Cafe {
         }
         return null;
     }
-    public Integer getCount(){
+    public int getCount(){
         return this.employees.size();
     }
     public String report(){
