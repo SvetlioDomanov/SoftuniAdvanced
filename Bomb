@@ -1,0 +1,83 @@
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int size = Integer.parseInt(scanner.nextLine());
+        String[] commands = scanner.nextLine().split(",");
+        int startingRow=0;
+        int startingCol=0;
+        int bombCount =0;
+        boolean reachedEnd = false;
+        char[][] matrix = new char[size][size];
+        //filling the matrix
+        for(int i=0;i<size;i++){
+            String line = scanner.nextLine().replaceAll(" ","");
+            matrix[i] = line.toCharArray();
+        }
+        //finding the start/number of bombs
+        for(int row = 0; row<size;row++) {
+            for (int col = 0; col < size; col++) {
+                if(matrix[row][col] == 'B'){
+                    bombCount++;
+                }
+                if(matrix[row][col] == 's'){
+                    startingRow = row;
+                    startingCol = col;
+                }
+            }
+            }
+        //using array to keep coordinates of player
+        int[] positions = {startingRow,startingCol};
+
+        for (String command : commands) {
+            int currentRow = positions[0];
+            int currentCol = positions[1];
+            //move function returns new coordinates
+            positions = move(command, currentRow, currentCol, size);
+            if (matrix[positions[0]][positions[1]] == 'B') {
+                System.out.println("You found a bomb!");
+                bombCount--;
+                matrix[positions[0]][positions[1]] = '+';
+                if (bombCount == 0) {
+                    break;
+                }
+            }
+            if (matrix[positions[0]][positions[1]] == 'e') {
+
+                System.out.printf("END! %d bombs left on the field\n", bombCount);
+                reachedEnd = true;
+                break;
+            }
+        }
+        if(bombCount==0){
+            System.out.println("Congratulations! You found all bombs!");
+        }
+        else if(!reachedEnd){
+            System.out.printf("%d bombs left on the field. Sapper position: (%d,%d)",bombCount,positions[0],positions[1]);
+        }
+
+    }
+    private static int[] move(String command, int currentRow, int currentCol,int size) {
+        switch (command){
+            case "up":
+                if(currentRow != 0){
+                    currentRow--;
+                }
+                break;
+            case "down":
+                if(currentRow != size-1)currentRow++;
+                break;
+            case "left":
+                if(currentCol!=0) currentCol--;
+                break;
+            case "right":
+                if(currentCol!=size-1)currentCol++;
+                break;
+        }
+        return new int[]{currentRow,currentCol};
+    }
+}
