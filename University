@@ -5,10 +5,11 @@ import java.util.List;
 
 public class University {
     public int capacity;
-    public List<Student> students = new ArrayList<>();
+    public List<Student> students;
 
     public University(int capacity) {
         this.capacity = capacity;
+        this.students = new ArrayList<>();
     }
 
     public int getCapacity() {
@@ -18,32 +19,30 @@ public class University {
     public List<Student> getStudents() {
         return students;
     }
+
     public int getStudentCount(){
         return this.students.size();
     }
 public String registerStudent(Student student){
-    for (Student s: this.students) {
-        if(s.getFirstName().equals(student.getFirstName()) && s.getLastName().equals(student.getLastName())){
-            return "Student is already in the university";
-        }
 
-}
 if(this.students.size() == this.capacity){
     return "No seats in the university";
 }
+    if(this.students.contains(student)){
+        return "Student is already in the university";
+    }
 else{
     students.add(student);
     return "Added student " + student.getFirstName() + " " + student.getLastName();
 }
 }
 public String dismissStudent(Student student) {
-    for (Student s : this.students) {
-        if (s.getFirstName().equals(student.getFirstName()) && s.getLastName().equals(student.getLastName())) {
-            this.students.remove(s);
-            return "Removed student " + student.firstName + " " + student.getLastName();
+
+        if (this.students.contains(student)) {
+            this.students.remove(student);
+            return "Removed student " + student.getFirstName() + " " + student.getLastName();
         }
-    }
-    return "Student not found";
+    else return "Student not found";
 }
 public Student getStudent(String firstName, String lastName){
     for (Student s : this.students) {
@@ -56,11 +55,11 @@ public Student getStudent(String firstName, String lastName){
 public String getStatistics(){
         StringBuilder sb = new StringBuilder();
     for (Student student:this.students) {
-        sb.append("//==Student: First Name = ").append(student.getFirstName())
-                .append(", , Last Name = ").append(student.getLastName())
+        sb.append("==Student: First Name = ").append(student.getFirstName())
+                .append(", Last Name = ").append(student.getLastName())
                 .append(", Best Subject = ").append(student.getBestSubject()).append("\n");
     }
-    return sb.toString();
+    return sb.toString().trim();
 }
 
 
