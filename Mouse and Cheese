@@ -1,0 +1,116 @@
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int size = Integer.parseInt(scanner.nextLine());
+        boolean mouseLeft = false;
+        int startingRow=0;
+        int startingCol=0;
+        int cheeseCollected = 0;
+        //fill the matrix
+        char[][] matrix = new char[size][size];
+        for(int i=0;i<size;i++){
+            String line = scanner.nextLine();
+            matrix[i] = line.toCharArray();
+        }
+        //find the start
+        for(int row = 0; row<size;row++){
+            for(int col = 0; col<size;col++){
+                if(matrix[row][col] == 'M'){
+                    startingRow = row;
+                    startingCol = col;
+                    break;
+                }
+            }
+        }
+        int[] positions = {startingRow,startingCol};
+        String command = scanner.nextLine();
+        while(!command.equals("end")){
+            int currentRow = positions[0];
+            int currentCol = positions[1];
+            if(!invalidMove(command,currentRow,currentCol,size)){
+                positions = move(command,currentRow,currentCol);
+            }
+            else{
+                System.out.println("Where is the mouse?");
+                mouseLeft = true;
+                break;
+            }
+            if(matrix[positions[0]][positions[1]]== 'B'){
+                matrix[positions[0]][positions[1]] = '-';
+                currentRow = positions[0];
+                currentCol = positions[1];
+                positions = move(command,currentRow,currentCol);
+            }
+            if(matrix[positions[0]][positions[1]]== 'c'){
+                cheeseCollected++;
+            }
+            matrix[positions[0]][positions[1]] = '-';
+            command = scanner.nextLine();
+        }
+        if(cheeseCollected>=5){
+            System.out.printf("Great job, the mouse is fed %d cheeses!\n",cheeseCollected);
+        }
+        else{
+            System.out.printf("The mouse couldn't eat the cheeses, she needed %d cheeses more.\n",5-cheeseCollected);
+        }
+        matrix[startingRow][startingCol] = '-';
+        if(!mouseLeft){
+            matrix[positions[0]][positions[1]] = 'M';
+        }
+        for(int row = 0; row<size;row++){
+            for(int col = 0; col<size;col++){
+                System.out.print(matrix[row][col]);
+            }
+            System.out.println();
+        }
+
+    }
+    private static boolean invalidMove(String command, int currentRow, int currentCol, int size) {
+        switch (command){
+            case "up":
+                if(currentRow == 0){
+                    return true;
+                }
+                break;
+            case "down":
+                if(currentRow == size-1){
+                    return true;
+                }
+                break;
+            case "left":
+                if(currentCol==0){
+                    return true;
+                }
+                break;
+            case "right":
+                if(currentCol==size-1){
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+    private static int[] move(String command, int currentRow, int currentCol) {
+        switch (command){
+            case "up":
+                currentRow--;
+                break;
+            case "down":
+                currentRow++;
+                break;
+            case "left":
+                currentCol--;
+                break;
+            case "right":
+                currentCol++;
+                break;
+        }
+        return new int[]{currentRow,currentCol};
+
+    }
+}
