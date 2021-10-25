@@ -1,0 +1,43 @@
+package com.company;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        int[] numbers = Arrays.stream(input.split("\\s+")).mapToInt(Integer::parseInt).toArray();
+        Function<int[],int[]> addFunc = array -> Arrays.stream(array).map(number -> number+=1).toArray();
+        Function<int[],int[]> subtractFunc = array -> Arrays.stream(array).map(number -> number-=1).toArray();
+        Function<int[],int[]> multiplyFunc = array -> Arrays.stream(array).map(number -> number*=2).toArray();
+        Consumer<int[]> printConsumer = array -> Arrays.stream(array).forEach(number -> System.out.print(number + " "));
+
+        String command = scanner.nextLine();
+        while(!command.equals("end")){
+            switch (command){
+                case "add":
+                numbers = addFunc.apply(numbers);
+                    break;
+                case "multiply":
+                    numbers =multiplyFunc.apply(numbers);
+                    break;
+                case "subtract":
+                    numbers =subtractFunc.apply(numbers);
+                    break;
+                case "print":
+                    printConsumer.accept(numbers);
+                    System.out.println();
+                    break;
+            }
+            command = scanner.nextLine();
+        }
+
+
+    }
+}
